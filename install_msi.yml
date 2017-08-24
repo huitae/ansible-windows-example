@@ -1,0 +1,17 @@
+---
+- name: Install MSI
+  hosts: Windows-server
+  gather_facts: false
+
+  tasks:
+    - name: Download the 7 Zip installer
+      win_get_url:
+        url: 'http://www.7-zip.org/a/7z1604-x64.msi'
+        dest: 'C:\7z1604-x64.msi'
+
+    - name: Install MSI
+      win_msi: 
+        path: 'C:\7z1604-x64.msi'
+        state: present
+        wait: true
+

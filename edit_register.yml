@@ -1,0 +1,11 @@
+---
+- name: Edit registry
+  hosts: Windows-server
+
+  tasks:
+  - name: edit windows reg
+    win_regedit:
+      key: HKCR:\SOFTWARE\MyCompany
+      value: Red Hat
+      data: 1337
+      datatype: dword

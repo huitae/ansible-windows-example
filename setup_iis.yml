@@ -1,0 +1,28 @@
+---
+- name: Install IIS
+  hosts: Windows-server
+  gather_facts: false
+
+  tasks:
+  - name: Install IIS (Web-Server only)
+    win_feature:
+      name: Web-Server
+      state: present
+      restart: yes
+    register: install_result
+
+  - name: Print Result
+    debug:
+      msg: "Successfully installed! {{ install_result.feature_result }}"
+    when: install_result.success
+
+  - debug:
+      var: install_result
+
+  - name: Reboot
+    win_reboot:
+      shutdown_timeout_sec: 3600
+      reboot_timeout_sec: 3600
+    when: 'install_result.changed == True and install_result.exitcode == "SuccessRestartRequired"'
+    #when: '(install_result.failed is defined and install_result.failed == True) or (install_result.reboot_required is defined and install_result.reboot_required)'
+

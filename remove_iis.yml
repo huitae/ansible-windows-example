@@ -1,0 +1,31 @@
+---
+- name: Remove IIS
+  hosts: Windows-server
+  gather_facts: false
+
+  tasks:
+  - name: Remove Default Web Site
+    win_iis_website:
+     name: "Default Web Site"
+     state: absent
+    register: remove_result
+
+  - debug:
+     var: remove_result
+
+  - name: Unnstall IIS (Web-Server only)
+    win_feature:
+      name: Web-Server
+      state: absent
+    register: remove_result
+
+  - debug:
+      var: remove_result
+
+  - name: Reboot
+    win_reboot:
+      shutdown_timeout_sec: 3600
+      reboot_timeout_sec: 3600
+    when: 'remove_result.changed == True and remove_result.exitcode == "SuccessRestartRequired"'
+    #when: '(remove_result.failed is defined and remove_result.failed == True) or (remove_result.reboot_required is defined and remove_result.reboot_required)'
+

@@ -1,0 +1,12 @@
+---
+- name: Uninstall MSI
+  hosts: Windows-server
+  gather_facts: false
+
+  tasks:
+    - name: Uninstall MSI
+      win_msi: 
+        path: 'C:\7z1604-x64.msi'
+        state: absent
+        wait: true
+
